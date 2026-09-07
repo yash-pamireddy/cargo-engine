@@ -1,35 +1,30 @@
 # CargoDB ⚡
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.3+-blue.svg)](https://www.typescriptlang.org/)
-[![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
-
-![CargoDB Dashboard Preview](public/dashboard.png)
-
-A high-performance, append-only key-value storage engine and binary blob store built with in-memory offset indexing, isolated multi-tenant bucketing, and automated zero-downtime compaction.
+A high-performance, append-only key-value storage engine and binary blob store written in TypeScript. Designed with an in-memory byte-offset index for $O(1)$ point lookups, multi-tenant bucket partitioning, automated zero-downtime log compaction, and an embedded glassmorphic web dashboard.
 
 ---
 
-## Highlights
+## Features
 
-* **Append-Only Disk Log:** Fast sequential writes with crash recovery, eliminating in-place disk overwrite hazards.
-* **In-Memory Offset Indexing:** Sub-millisecond $O(1)$ point lookups by seeking directly to byte offsets.
-* **Multi-Tenant Partitioning:** Isolated data buckets (`default`, `assets`, `analytics`) with independent log structures.
-* **Binary Blob Streaming:** Direct storage and streaming for files, images, and archives with preserved MIME metadata.
-* **Zero-Downtime Compaction:** Background garbage collection reclaims disk space consumed by tombstones and overwritten keys.
-* **Glassmorphic Web GUI:** Real-time console featuring telemetry inspection, record viewing, and drag-and-drop file uploads.
-* **Complete Developer Tooling:** Native strongly typed TypeScript SDK alongside a global terminal CLI (`cargodb`).
+* **Append-Only Disk Log:** Fast sequential writes eliminate in-place write hazards and simplify crash recovery.
+* **$O(1)$ RAM Indexing:** Maps active keys directly to byte offsets and record lengths in memory for immediate point reads.
+* **Unified Key-Value & Blobs:** Store structured JSON records alongside binary assets (images, PDFs, audio) with preserved MIME types.
+* **Zero-Downtime Compaction:** Background garbage collection reclaims disk space taken by overwritten records and tombstones without interrupting service.
+* **Multi-Tenant Partitioning:** Isolated data directories organized by distinct bucket namespaces.
+* **Developer Tooling:** Comes equipped with a global shell CLI (`cargodb`), a fully typed TypeScript SDK, and an embedded web console.
 
 ---
 
 ## Architecture Overview
 
+CargoDB applies log-structured storage principles inspired by Bitcask:
+
 ```text
-               [ Put / Set / Upload / Delete ]
+               [ Set / Put / Upload / Delete ]
                               │
                               ▼
                  ┌─────────────────────────┐
-                 │  Append-Only Disk Log   │ ──> Writes never mutate existing data
+                 │  Append-Only Disk Log   │ ──> Pure sequential writes
                  └─────────────────────────┘
                               │
                               ▼
