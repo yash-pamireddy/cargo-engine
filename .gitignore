@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Build Outputs
+dist/
+*.tsbuildinfo
+
+# Local Database & Test Data
+cargo_data/
+*.log
+*.tmp
+
+# Environment & Secrets
+.env
+.env.local
+.env.*.local
+
+# Operating System & IDE Files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
